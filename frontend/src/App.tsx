@@ -37,35 +37,45 @@ export default function App() {
 
   return (
     <div>
-      <nav>
-        <strong>VitaeMX</strong>{' '}
-        {PAGES.map((p) => (
-          <a key={p.id} href={`#/${p.id}`}>
-            {page === p.id ? <strong>{p.label}</strong> : p.label}
+      <header className="app-header">
+        <div className="brand-row">
+          <div className="brand">
+            VitaeMX <span className="badge">CONAPO 2023</span>
+          </div>
+          <a className="source-link" href="https://github.com/cortsito/vitaemx">
+            Ver código en GitHub
           </a>
-        ))}
-        <a href="https://github.com/cortsito/vitaemx">Código</a>
-      </nav>
-      <p className="muted">
-        Motor actuarial de mortalidad para México, construido sobre las proyecciones oficiales de
-        CONAPO. Herramienta educativa: mortalidad poblacional, no tarificación real.
-      </p>
+        </div>
+        <p className="tagline">
+          Motor actuarial de mortalidad para México, construido sobre las proyecciones oficiales de
+          CONAPO. Herramienta educativa: mortalidad poblacional, no tarificación real.
+        </p>
+        <nav className="tabs">
+          {PAGES.map((p) => (
+            <a key={p.id} href={`#/${p.id}`} className={page === p.id ? 'active' : undefined}>
+              {p.label}
+            </a>
+          ))}
+        </nav>
+      </header>
 
-      {states.error && <p className="error">{states.error}</p>}
-      {states.data && page !== 'metodologia' && (
-        <StateSexSelector
-          states={states.data}
-          stateCode={stateCode}
-          sex={sex}
-          onStateChange={setStateCode}
-          onSexChange={setSex}
-        />
-      )}
+      <main>
+        {states.error && <p className="error">{states.error}</p>}
+        {states.data && page !== 'metodologia' && (
+          <StateSexSelector
+            states={states.data}
+            stateCode={stateCode}
+            sex={sex}
+            onStateChange={setStateCode}
+            onSexChange={setSex}
+          />
+        )}
 
-      {page === 'tabla' && <LifeTableView stateCode={stateCode} sex={sex} />}
-      {page === 'curva' && <MortalityCurveView stateCode={stateCode} sex={sex} />}
-      {page === 'prima' && <PremiumCalculator stateCode={stateCode} sex={sex} />}
-      {page === 'metodologia' && <MethodologyNotes />}
+        {page === 'tabla' && <LifeTableView stateCode={stateCode} sex={sex} />}
+        {page === 'curva' && <MortalityCurveView stateCode={stateCode} sex={sex} />}
+        {page === 'prima' && <PremiumCalculator stateCode={stateCode} sex={sex} />}
+        {page === 'metodologia' && <MethodologyNotes />}
+      </main>
     </div>
   )
 }

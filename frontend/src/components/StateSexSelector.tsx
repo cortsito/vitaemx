@@ -18,8 +18,8 @@ export default function StateSexSelector({
   onSexChange,
 }: Props) {
   return (
-    <div className="controls">
-      <label>
+    <div className="card filter-bar">
+      <label className="field">
         Entidad
         <select value={stateCode} onChange={(e) => onStateChange(Number(e.target.value))}>
           {states.map((s) => (
@@ -29,7 +29,7 @@ export default function StateSexSelector({
           ))}
         </select>
       </label>
-      <label>
+      <label className="field">
         Sexo
         <select value={sex} onChange={(e) => onSexChange(e.target.value as Sex)}>
           {(Object.keys(SEX_LABELS) as Sex[]).map((key) => (
