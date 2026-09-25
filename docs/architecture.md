@@ -64,17 +64,26 @@ Documented in full in [`docs/adr/0001-python-react-stack.md`](docs/adr/0001-pyth
 
 Documented in full in [`docs/adr/0002-vercel-serverless-hosting.md`](docs/adr/0002-vercel-serverless-hosting.md). In short: free tiers on platforms like Render or Railway put the backend to sleep after a period of inactivity, causing a multi-second "cold start" delay the first time a recruiter or reviewer opens the demo — a bad first impression for a portfolio piece. Vercel's serverless functions have a much smaller, less noticeable cold start, and hosting frontend and backend in the same project means one deploy pipeline and one domain, at $0.
 
-## API contract (Phase 1, indicative)
+## API contract (Phase 1)
 
 ```
-GET  /api/states                        → list of Mexican states with data available
-GET  /api/life-table/{state}            → full life table (qx, lx, dx, Lx, Tx, ex) for a state
-GET  /api/mortality-curve/{state}       → raw vs Gompertz-Makeham-fitted curve + goodness-of-fit
-POST /api/premium                       → { state, age, product, term, interest_rate } → premium breakdown
-GET  /api/methodology-version           → which dataset/model version is currently served
+GET  /api/states                              → [{code, name}]; code 0 = national, 1–32 = states (INEGI order)
+GET  /api/life-table/{code}?sex=total         → life table rows (age, mx, qx, lx, dx, Lx, Tx, ex, qx_fitted, qx_source)
+GET  /api/mortality-curve/{code}?sex=total    → Gompertz-Makeham parameters + per-age raw vs fitted μx and qx
+POST /api/premium                             → {state_code, sex, age, product, term, interest_rate, sum_assured} → premium breakdown + limitations
+GET  /api/methodology-version                 → contents of data/processed/version.json
+GET  /api/validation                          → rebuilt vs CONAPO-published e0 per state and sex
 ```
 
-Exact schemas will be formalized as OpenAPI/Pydantic models once `backend/` scaffolding begins (tracked in [`ROADMAP.md`](ROADMAP.md), Phase 1).
+`sex` is `total`, `male` or `female`. Schemas are Pydantic models in `backend/app/schemas.py`, mirrored by hand in `frontend/src/api/types.ts`; the OpenAPI document is served at `/docs` when running locally.
+
+## Repository layout of the implementation
+
+- `research/vitaemx_research/` — the math (`lifetable.py`, `gompertz.py`, `premiums.py`) as importable, unit-tested modules; the notebooks `01`–`04` call them.
+- `data/processed/` — `life_tables.csv`, `fitted_qx.csv`, `gompertz_makeham_params.csv`, `validation_e0.csv`, `version.json` (data dictionary in `data/processed/README.md`).
+- `backend/app/` — `data.py` loads the CSVs once per process, `actuarial.py` prices at request time (pure Python, no numpy), `main.py` holds the routes.
+- `api/index.py` + `vercel.json` (repo root) — Vercel wiring: one Python function for `/api/*`, static `frontend/dist` for everything else.
+- `frontend/src/` — `App.tsx` (hash-based navigation, no router dependency), one component per view, `api/client.ts` as the only place that calls `fetch`.
 
 ## Deployment pipeline
 

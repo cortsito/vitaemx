@@ -15,9 +15,11 @@ A life table follows a hypothetical cohort of `l0` people (conventionally `l0 = 
 | `Tx` | Total person-years lived after age `x` (`Tx = Σ Lx` for all ages ≥ x) |
 | `ex` | Life expectancy at exact age `x` (`ex = Tx / lx`) |
 
-**Source of `qx`:** VitaeMX uses CONAPO's published `qx` values directly (from the *Proyecciones de la Población de México y las Entidades Federativas 2020-2070*) rather than estimating them from raw INEGI death counts and population estimates. Rationale is documented in [`docs/adr/0003-conapo-as-primary-source.md`](docs/adr/0003-conapo-as-primary-source.md). Raw INEGI mortality microdata is used as a secondary cross-check, not as the primary input, because CONAPO's figures are already reconciled for underreporting and migration effects that raw death counts are not.
+**Source of `qx`:** VitaeMX builds `qx` from CONAPO's projected deaths and mid-year population by single age, sex and state (*Proyecciones de la Población de México y las Entidades Federativas 2020-2070*, 2023 round), rather than from raw INEGI death counts. CONAPO's open-data release does not publish `qx` itself, only the deaths and populations its mortality model produced, so dividing the two recovers the schedule CONAPO used. Rationale: [ADR 0003](0003_conapo-as-primary-source.md) (why CONAPO) and [ADR 0004](0004_qx-from-conapo-deaths-and-population.md) (why deaths ÷ population). The reference year served is recorded in `data/processed/version.json` (currently 2023). The national table is the sum of the 32 states; the both-sexes table is the sum of the two sexes.
 
-**Derivation of `lx`, `dx`, `Lx`, `Tx`, `ex`:** computed from `qx` using the standard actuarial recursion, with the conventional midyear approximation `Lx ≈ (lx + lx+1) / 2` for ages where CONAPO does not supply a finer breakdown, and a stated terminal-age closure assumption (see §4).
+**From rates to probabilities:** `mx = Dx / Px` (central death rate), then `qx = mx / (1 + (1 − ax)·mx)`, where `ax` is the average fraction of the year lived by those who die in it. `ax = 0.5` for all ages except `a0 = 0.1`, since infant deaths cluster near birth. These two constants are the only assumption VitaeMX adds on top of CONAPO's numbers; notebook `03` measures their effect by comparing the resulting `e0` with CONAPO's published one.
+
+**Derivation of `lx`, `dx`, `Lx`, `Tx`, `ex`:** `l0 = 100,000`, `lx+1 = lx·(1 − qx)`, `dx = lx·qx`, `Lx = lx − (1 − ax)·dx`, `Tx = Σ Lx`, `ex = Tx / lx`. The last age is an open interval with `qx = 1` and `Lx = lx / mx` (see §4). Implemented in `research/vitaemx_research/lifetable.py`; produced by `research/01_build_life_tables.ipynb`.
 
 ## 2. Gompertz-Makeham fitting
 
@@ -29,7 +31,9 @@ The Gompertz-Makeham law models the force of mortality as:
 
 where `A` is an age-independent (accident/background) hazard, and `B·c^x` is the Gompertz term capturing the exponential rise in mortality with age. This is fit to the CONAPO-derived `qx` series (converted to `μx` via `μx ≈ -ln(1 - qx)` under the standard piecewise-constant-hazard assumption) using nonlinear least squares (`scipy.optimize.curve_fit`), restricted to the adult age range (conventionally 30–90) where the law is known to hold well — infant and very-old-age mortality are documented departures and are explicitly excluded from the fit rather than silently mismodeled.
 
-**Goodness of fit** is reported as both R² on `log(μx)` and a plotted residual comparison against the raw CONAPO curve, shown alongside every fitted table in the application rather than only in the notebooks — the user should always be able to see how much smoothing has been applied.
+The least-squares loss is taken on `log(μx)` rather than on `μx` itself, so that ages 30 (`μ ≈ 10⁻³`) and 90 (`μ ≈ 2·10⁻¹`) weigh equally; `A` and `B` are parameterised on the log scale to keep them positive during the search. Implemented in `research/vitaemx_research/gompertz.py`; produced by `research/02_fit_gompertz_makeham.ipynb`.
+
+**Goodness of fit** is reported as both R² and RMSE on `log(μx)` inside the fitting window, and a plotted residual comparison against the raw CONAPO curve, shown alongside every fitted table in the application rather than only in the notebooks — the user should always be able to see how much smoothing has been applied. For the 2023 tables R² is above 0.98 for all 99 state/sex combinations, above 0.998 nationally.
 
 ## 3. Simplified premium calculation
 
@@ -61,10 +65,12 @@ Stated here in full so nothing is implicit:
 
 - **No selection effects.** Real insurers price based on underwritten risk (health status, smoking, occupation); VitaeMX prices from population-average mortality only.
 - **No socioeconomic stratification.** CONAPO's tables are state-level aggregates; mortality varies significantly within a state by income, education, and access to healthcare, which this model does not capture.
-- **Terminal age closure.** The table is closed at the oldest age CONAPO reports (currently 109+ grouped); the tail beyond that is not separately modeled in Phase 1.
+- **Terminal age closure.** The table is closed at the oldest age CONAPO reports (109) as an open interval with `qx = 1` and `Lx = lx / mx`. CONAPO rounds counts to whole people, so in small states the population reaches zero a few years earlier (ages 106–109); the table is then closed at the last age before the first zero, which is the only reading consistent with "nobody alive".
+- **Separation factors.** `a0 = 0.1`, `ax = 0.5` elsewhere (see §1). CONAPO does not publish its own values, and this is the main reason the rebuilt `e0` sits 0.1–0.8 years above CONAPO's published figure (see `research/03_validate_life_expectancy.ipynb`).
 - **Constant discount rate.** A flat, user-adjustable interest rate is assumed for the full duration of any contract; no yield curve.
 - **No expenses, lapses, or profit loading.** Premiums shown are net (pure risk) premiums only, not what a real insurer would charge.
-- **Fitting window.** The Gompertz-Makeham fit is restricted to ages 30–90 by default; results outside that range fall back to the raw CONAPO `qx`, and the application marks which values are "fitted" vs "raw."
+- **Fitting window.** The Gompertz-Makeham fit is restricted to ages 30–90 by default; results outside that range fall back to the raw CONAPO `qx`, and the application marks which values are "fitted" vs "raw." Premiums are computed from the fitted-inside / raw-outside `qx` series rebuilt into `lx` from `l0 = 100,000`.
+- **INEGI cross-check deferred.** Raw INEGI death registrations could not be fetched when Phase 1 was built; the validation in Phase 1 is against CONAPO's own published life expectancy instead. See [ADR 0004](0004_qx-from-conapo-deaths-and-population.md).
 
 These limitations are not hidden in fine print — every premium result in the UI links back to this section.
 

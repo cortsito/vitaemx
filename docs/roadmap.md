@@ -6,11 +6,13 @@ VitaeMX is built in phases, each shipped as a working, deployed release rather t
 
 **Goal:** a correct, validated, deployed mortality engine for Mexico, end to end.
 
-- Build life tables for Mexico (national + 32 states) from CONAPO data.
-- Fit a Gompertz-Makeham curve per state; report goodness of fit.
-- Compute simplified term-life and whole-life premiums from the fitted curve.
-- Ship the FastAPI backend and React frontend described in [`ARCHITECTURE.md`](ARCHITECTURE.md), deployed on Vercel.
-- Full methodology written up in [`METHODOLOGY.md`](METHODOLOGY.md).
+- [x] Build life tables for Mexico (national + 32 states) from CONAPO data.
+- [x] Fit a Gompertz-Makeham curve per state; report goodness of fit.
+- [x] Compute simplified term-life and whole-life premiums from the fitted curve.
+- [x] FastAPI backend and React frontend described in [`architecture.md`](architecture.md), with Vercel configuration in the repo.
+- [ ] Deploy to Vercel and put the public URL in the README.
+- [x] Full methodology written up in [`methodology.md`](methodology.md).
+- [ ] Cross-check against raw INEGI death registrations (deferred, see [ADR 0004](0004_qx-from-conapo-deaths-and-population.md)).
 
 **Definition of done:** a public URL where anyone can pick a state and an age, see the underlying life table and fitted mortality curve, get a premium quote, and read exactly how each number was produced.
 
