@@ -1,2 +1,4 @@
 # Root requirements: what Vercel installs for the serverless function in api/.
--r backend/requirements.txt
+# Keep in sync with backend/requirements.txt (Vercel's parser does not support "-r").
+fastapi>=0.115
+pydantic>=2.7
