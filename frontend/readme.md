@@ -1,5 +1,13 @@
 # frontend/
 
-React + TypeScript application, built to static assets and deployed from the same Vercel project as the backend. Calls the API described in [`../ARCHITECTURE.md`](../ARCHITECTURE.md) and renders life tables, mortality curves, and premium results following the design notes in [`../CLAUDE.md`](../CLAUDE.md).
+React + TypeScript (Vite). Deliberately plain: global styles only (`src/index.css`), no component library, no routing library (hash navigation in `App.tsx`), one inline SVG chart.
 
-Scaffolding (project setup, first components) is tracked as Phase 1 work in [`../ROADMAP.md`](../ROADMAP.md).
+```bash
+npm install
+npm run dev            # http://127.0.0.1:5173, proxies /api to the backend on :8000
+npm run lint
+npm run format
+npm run build          # tsc + vite → dist/
+```
+
+`src/api/client.ts` is the only module that calls `fetch`; `src/api/types.ts` mirrors `backend/app/schemas.py`. One component per view in `src/components/`.
