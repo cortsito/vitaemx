@@ -1,5 +1,5 @@
 # data/
 
-`raw/` — cached snapshots of source datasets (CONAPO, INEGI, WHO), each with its fetch date recorded, since none of these sources provide a stable versioned API. See [`../DATA_SOURCES.md`](../DATA_SOURCES.md) for what each source is and its license.
+`raw/` — CONAPO open-data files, downloaded by `research/fetch_raw_data.py` with pinned checksums; not committed (~90 MB). See [`raw/README.md`](raw/README.md) and [`docs/data-sources.md`](../docs/data-sources.md).
 
-`processed/` — versioned, ready-to-serve outputs produced by the notebooks in `research/`: life tables, fitted model parameters, validation metrics. This is what `backend/` actually reads. Add a short data dictionary here once the first processed files exist, describing each column and which notebook produced it.
+`processed/` — versioned, ready-to-serve outputs produced by the notebooks in `research/` (about 1.5 MB, committed). This is what `backend/` reads. Data dictionary: [`processed/README.md`](processed/README.md).

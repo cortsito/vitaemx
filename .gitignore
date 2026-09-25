@@ -29,3 +29,5 @@ Thumbs.db
 # --- Data (large/raw snapshots only — processed CSV/Parquet used by the app ARE tracked) ---
 data/raw/*.zip
 data/raw/*.xlsx
+data/raw/*.csv
+
