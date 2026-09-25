@@ -18,7 +18,13 @@ export default function StateSexSelector({
   onSexChange,
 }: Props) {
   return (
-    <div className="card filter-bar">
+    <aside className="context-panel" aria-labelledby="context-title">
+      <div className="context-panel__header">
+        <span className="eyebrow" id="context-title">
+          Base consultada
+        </span>
+        <p>Elige la población sobre la cual se construyen todos los resultados de esta vista.</p>
+      </div>
       <label className="field">
         Entidad
         <select value={stateCode} onChange={(e) => onStateChange(Number(e.target.value))}>
@@ -39,6 +45,7 @@ export default function StateSexSelector({
           ))}
         </select>
       </label>
-    </div>
+      <p className="context-panel__note">Proyecciones oficiales de CONAPO · 2023</p>
+    </aside>
   )
 }

@@ -44,92 +44,127 @@ export default function PremiumCalculator({ stateCode, sex }: Props) {
   }
 
   return (
-    <div>
-      <div className="card">
-        <p className="section-title">Prima neta simplificada</p>
-        <p className="section-lede">
+    <article className="view premium-view" aria-labelledby="view-title">
+      <header className="view-header">
+        <p className="eyebrow">Cálculo actuarial</p>
+        <h1 className="view-title" id="view-title" tabIndex={-1}>
+          Estima una prima neta.
+        </h1>
+        <p className="view-lede">
           Prima de riesgo pura: sin gastos, sin recargo de utilidad, sin caducidad y sin selección
           médica. No es lo que cobraría una aseguradora real. Ver{' '}
           <a href="#/metodologia">metodología, §3 y §4</a>.
         </p>
+      </header>
+      <section className="calculator-panel" aria-labelledby="calculator-title" aria-busy={busy}>
+        <div className="calculator-panel__heading">
+          <div>
+            <p className="eyebrow">Hipótesis</p>
+            <h2 id="calculator-title">Define el producto</h2>
+          </div>
+          <p>Valores nominales en MXN</p>
+        </div>
         <form onSubmit={calculate}>
           <div className="controls">
-            <label className="field">
+            <label className="field age-field">
               Edad
               <input
                 type="number"
                 min={0}
                 max={100}
+                inputMode="numeric"
+                required
                 value={age}
                 onChange={(e) => setAge(Number(e.target.value))}
               />
             </label>
-            <label className="field">
+            <label className="field product-field">
               Producto
               <select value={product} onChange={(e) => setProduct(e.target.value as Product)}>
                 <option value="term">Temporal (n años)</option>
                 <option value="whole_life">Vida entera</option>
               </select>
             </label>
-            <label className="field">
+            <label className="field term-field">
               Plazo (años)
               <input
                 type="number"
                 min={1}
                 max={60}
+                inputMode="numeric"
+                required
                 value={term}
                 disabled={product === 'whole_life'}
+                aria-describedby="term-help"
                 onChange={(e) => setTerm(Number(e.target.value))}
               />
+              <span className="field-hint" id="term-help">
+                {product === 'whole_life' ? 'No aplica para vida entera.' : 'De 1 a 60 años.'}
+              </span>
             </label>
-            <label className="field">
+            <label className="field interest-field">
               Tasa de interés anual (%)
               <input
                 type="number"
                 min={0}
                 max={30}
                 step={0.25}
+                inputMode="decimal"
+                required
                 value={interest}
                 onChange={(e) => setInterest(Number(e.target.value))}
               />
             </label>
-            <label className="field">
+            <label className="field sum-field">
               Suma asegurada (MXN)
               <input
                 type="number"
                 min={0}
                 step={1000}
+                inputMode="numeric"
+                required
                 value={sumAssured}
                 onChange={(e) => setSumAssured(Number(e.target.value))}
               />
             </label>
-            <button type="submit" disabled={busy}>
-              Calcular
+            <button className="primary-button" type="submit" disabled={busy}>
+              {busy ? 'Calculando…' : 'Calcular prima'}
             </button>
           </div>
         </form>
-        {error && <p className="error">{error}</p>}
-      </div>
+        {error && (
+          <p className="error" role="alert">
+            {error}
+          </p>
+        )}
+      </section>
 
       {result && (
-        <div className="card">
-          <div className="stat-grid">
-            <div className="stat-tile accent">
-              <p className="label">Prima neta única</p>
-              <p className="value">{fmt.money(result.net_single_premium)}</p>
+        <section className="result-section" aria-labelledby="result-title" aria-live="polite">
+          <div className="result-section__heading">
+            <div>
+              <p className="eyebrow">Resultado</p>
+              <h2 id="result-title">El costo esperado del riesgo</h2>
             </div>
-            <div className="stat-tile accent">
-              <p className="label">Prima anual nivelada</p>
-              <p className="value">{fmt.money(result.annual_premium)}</p>
-            </div>
-            <div className="stat-tile">
-              <p className="label">Esperanza de vida a esa edad</p>
-              <p className="value">
-                {fmt.fixed(result.life_expectancy_at_age, 2)} <span className="unit">años</span>
-              </p>
-            </div>
+            <p>Con las condiciones elegidas y la base de mortalidad seleccionada.</p>
           </div>
-          <table className="kv" style={{ marginTop: 18 }}>
+          <dl className="metric-grid premium-metrics" aria-label="Resultados de prima">
+            <div className="metric metric--primary">
+              <dt>Prima neta única</dt>
+              <dd className="metric__value">{fmt.money(result.net_single_premium)}</dd>
+            </div>
+            <div className="metric metric--primary">
+              <dt>Prima anual nivelada</dt>
+              <dd className="metric__value">{fmt.money(result.annual_premium)}</dd>
+            </div>
+            <div className="metric">
+              <dt>Esperanza de vida a esa edad</dt>
+              <dd className="metric__value">
+                {fmt.fixed(result.life_expectancy_at_age, 2)} <span className="unit">años</span>
+              </dd>
+            </div>
+          </dl>
+          <table className="kv detail-table">
             <tbody>
               <tr>
                 <td>Prima neta única (por unidad de suma asegurada)</td>
@@ -149,12 +184,10 @@ export default function PremiumCalculator({ stateCode, sex }: Props) {
               </tr>
             </tbody>
           </table>
-          <p className="muted" style={{ marginTop: 10 }}>
-            Base de mortalidad: {result.mortality_basis}.
-          </p>
+          <p className="muted detail-note">Base de mortalidad: {result.mortality_basis}.</p>
           <p className="muted">Limitaciones: {result.limitations.join(' ')}</p>
-        </div>
+        </section>
       )}
-    </div>
+    </article>
   )
 }
