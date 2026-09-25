@@ -1,0 +1,9 @@
+pandas>=2.2
+numpy>=1.26
+scipy>=1.13
+matplotlib>=3.8
+jupyter>=1.0
+nbconvert>=7.16
+pytest>=8.0
+black>=24.0
+isort>=5.13
