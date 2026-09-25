@@ -1,0 +1,35 @@
+{
+  "methodology_version": "1.0.0",
+  "data_source": "CONAPO, Proyecciones de la Población de México y las Entidades Federativas 2020-2070 (pry23)",
+  "reference_year": 2023,
+  "processed_on": "2026-09-25",
+  "raw_files": [
+    {
+      "file": "01_Defunciones_1950_2070.csv",
+      "sha256": "9d5c24f09e3739044d301f8886d59bf6336f1908434c37ee29962642d1bfa075"
+    },
+    {
+      "file": "00_Pob_Mitad_1950_2070.csv",
+      "sha256": "89db6adc7930965fb5b5c01ad3a98765ed90afa6a151c2cfb913acc2b9e0cac6"
+    },
+    {
+      "file": "05_Indicadores_demograficos_proyecciones.csv",
+      "sha256": "e0407d1640f38232023cf97656a0cb7be46049b1cb2344198c7e4aaec7cae6cd"
+    }
+  ],
+  "gompertz_makeham": {
+    "fit_age_min": 30,
+    "fit_age_max": 90,
+    "loss": "least squares on log(mu_x)"
+  },
+  "life_table": {
+    "radix": 100000,
+    "a0": 0.1,
+    "ax": 0.5,
+    "closure": "open interval at last age with exposure"
+  },
+  "produced_by": [
+    "01_build_life_tables.ipynb",
+    "02_fit_gompertz_makeham.ipynb"
+  ]
+}

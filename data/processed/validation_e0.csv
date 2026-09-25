@@ -1,0 +1,100 @@
+state_code,state_name,sex,e0_vitaemx,e0_conapo,difference_years
+0,República Mexicana,female,78.7101,78.64,0.070113
+0,República Mexicana,male,72.3151,72.25,0.0650622
+0,República Mexicana,total,75.5009,75.32,0.180944
+1,Aguascalientes,female,80.0277,79.89,0.137668
+1,Aguascalientes,male,73.924,73.67,0.253966
+1,Aguascalientes,total,76.9806,76.65,0.33062
+2,Baja California,female,79.7478,79.58,0.167808
+2,Baja California,male,73.7028,73.43,0.272784
+2,Baja California,total,76.588,76.38,0.207991
+3,Baja California Sur,female,80.2362,80.15,0.0861644
+3,Baja California Sur,male,74.3916,74.08,0.311604
+3,Baja California Sur,total,77.1603,77,0.160272
+4,Campeche,female,78.134,77.65,0.483962
+4,Campeche,male,71.5326,71.19,0.342584
+4,Campeche,total,74.8031,74.28,0.523064
+5,Coahuila,female,80.177,80.09,0.0870367
+5,Coahuila,male,74.1991,73.95,0.24908
+5,Coahuila,total,77.1141,76.9,0.214079
+6,Colima,female,79.4353,79.23,0.205321
+6,Colima,male,73.2055,72.95,0.255505
+6,Colima,total,76.2642,75.97,0.294166
+7,Chiapas,female,76.9415,76.18,0.761538
+7,Chiapas,male,70.0021,69.63,0.372061
+7,Chiapas,total,73.4812,72.76,0.721189
+8,Chihuahua,female,79.8006,79.64,0.160616
+8,Chihuahua,male,73.7726,73.49,0.282559
+8,Chihuahua,total,76.7105,76.44,0.270454
+9,Ciudad de México,female,79.9938,79.84,0.153758
+9,Ciudad de México,male,73.9217,73.66,0.261675
+9,Ciudad de México,total,76.9933,76.63,0.363261
+10,Durango,female,78.9584,78.59,0.368368
+10,Durango,male,72.6358,72.31,0.325848
+10,Durango,total,75.7482,75.33,0.418186
+11,Guanajuato,female,78.5004,78.02,0.480406
+11,Guanajuato,male,71.9933,71.66,0.333297
+11,Guanajuato,total,75.2668,74.71,0.556846
+12,Guerrero,female,77.1044,76.3,0.804368
+12,Guerrero,male,70.136,69.74,0.396
+12,Guerrero,total,73.6865,72.88,0.80653
+13,Hidalgo,female,77.7061,77.02,0.686085
+13,Hidalgo,male,71.0126,70.6,0.412557
+13,Hidalgo,total,74.4184,73.67,0.748406
+14,Jalisco,female,79.3725,79.08,0.292505
+14,Jalisco,male,73.1317,72.82,0.311714
+14,Jalisco,total,76.2142,75.82,0.394195
+15,México,female,78.5826,78.18,0.402638
+15,México,male,72.1826,71.91,0.272638
+15,México,total,75.392,74.92,0.47199
+16,Michoacán,female,77.96,77.3,0.659968
+16,Michoacán,male,71.2553,70.81,0.445282
+16,Michoacán,total,74.6124,73.92,0.692378
+17,Morelos,female,78.0903,77.46,0.630289
+17,Morelos,male,71.4609,71.05,0.410864
+17,Morelos,total,74.8049,74.12,0.684945
+18,Nayarit,female,79.0744,78.7,0.374371
+18,Nayarit,male,72.7699,72.38,0.389927
+18,Nayarit,total,75.8568,75.42,0.436751
+19,Nuevo León,female,80.7443,80.73,0.0143499
+19,Nuevo León,male,74.8896,74.62,0.269581
+19,Nuevo León,total,77.7297,77.56,0.169659
+20,Oaxaca,female,77.2803,76.5,0.780254
+20,Oaxaca,male,70.3569,69.93,0.426947
+20,Oaxaca,total,73.9018,73.07,0.831781
+21,Puebla,female,77.6934,77.04,0.653433
+21,Puebla,male,70.9686,70.6,0.368597
+21,Puebla,total,74.3954,73.69,0.705412
+22,Querétaro,female,79.58,79.3,0.28
+22,Querétaro,male,73.4144,73.1,0.314407
+22,Querétaro,total,76.492,76.08,0.412013
+23,Quintana Roo,female,79.229,79,0.229037
+23,Quintana Roo,male,73.0848,72.84,0.244832
+23,Quintana Roo,total,76.0383,75.8,0.238316
+24,San Luis Potosí,female,78.8195,78.39,0.429536
+24,San Luis Potosí,male,72.3707,72.01,0.360685
+24,San Luis Potosí,total,75.6069,75.07,0.536886
+25,Sinaloa,female,79.4321,79.16,0.272099
+25,Sinaloa,male,73.2475,72.92,0.327486
+25,Sinaloa,total,76.2837,75.92,0.363659
+26,Sonora,female,79.9123,79.77,0.142325
+26,Sonora,male,73.8945,73.61,0.28449
+26,Sonora,total,76.7942,76.57,0.224182
+27,Tabasco,female,77.5508,76.93,0.620795
+27,Tabasco,male,70.8301,70.5,0.330131
+27,Tabasco,total,74.185,73.58,0.604996
+28,Tamaulipas,female,79.2347,78.92,0.314677
+28,Tamaulipas,male,72.966,72.66,0.306004
+28,Tamaulipas,total,76.0404,75.66,0.380411
+29,Tlaxcala,female,77.9192,77.33,0.589205
+29,Tlaxcala,male,71.2426,70.87,0.372609
+29,Tlaxcala,total,74.6234,73.97,0.653402
+30,Veracruz,female,77.5786,76.88,0.698621
+30,Veracruz,male,70.8006,70.41,0.390639
+30,Veracruz,total,74.2394,73.51,0.72941
+31,Yucatán,female,78.5778,78.1,0.477793
+31,Yucatán,male,72.1501,71.76,0.39006
+31,Yucatán,total,75.3204,74.8,0.520356
+32,Zacatecas,female,78.1009,77.55,0.550932
+32,Zacatecas,male,71.4257,71.05,0.375718
+32,Zacatecas,total,74.7611,74.16,0.601072

@@ -1,12 +1,19 @@
 # research/
 
-Jupyter notebooks that are the single source of truth for VitaeMX's science: they pull raw data (from `data/raw/`), clean it, fit the models described in [`../METHODOLOGY.md`](../METHODOLOGY.md), validate the results, and write versioned output to `data/processed/` for the backend to serve.
+The science, kept reproducible and separate from the app. Reusable code lives in `vitaemx_research/` (unit-tested in `tests/`); the notebooks are thin and call it.
 
-Suggested notebook order for Phase 1:
+```bash
+pip install -r requirements.txt
+python fetch_raw_data.py     # downloads CONAPO files into data/raw/ (not committed)
+pytest
+jupyter nbconvert --to notebook --execute --inplace 0*.ipynb
+```
 
-1. `01_build_life_tables.ipynb` — load CONAPO data, construct `qx`/`lx`/`dx`/`Lx`/`Tx`/`ex` per state.
-2. `02_fit_gompertz_makeham.ipynb` — fit the mortality law, report goodness of fit.
-3. `03_validate_against_inegi.ipynb` — cross-check against raw INEGI death registrations.
-4. `04_premium_calculations.ipynb` — derive and sanity-check the premium formulas before they're ported into the backend.
+Notebooks, in order:
 
-Each notebook should end by writing its output to `data/processed/` with a clear filename and a short data dictionary in `data/processed/README.md`, not just leave results sitting in notebook cells.
+1. `01_build_life_tables.ipynb` — deaths ÷ population → `qx` → full life table per state and sex. Writes `life_tables.csv`.
+2. `02_fit_gompertz_makeham.ipynb` — fits `μ(x) = A + B·c^x` on ages 30–90, reports R². Writes `gompertz_makeham_params.csv`, `fitted_qx.csv`, `version.json`.
+3. `03_validate_life_expectancy.ipynb` — rebuilt `e0` vs CONAPO's published `e0`. Writes `validation_e0.csv`. (The INEGI cross-check originally planned here is deferred; see [ADR 0004](../docs/0004_qx-from-conapo-deaths-and-population.md).)
+4. `04_premium_calculations.ipynb` — derives and sanity-checks the premium formulas the backend serves.
+
+Modules: `conapo.py` (loading/reshaping), `lifetable.py` (§1 of the methodology), `gompertz.py` (§2), `premiums.py` (§3), `versioning.py` (provenance). Column meanings: [`data/processed/README.md`](../data/processed/README.md).
